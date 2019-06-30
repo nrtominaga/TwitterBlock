@@ -5,6 +5,7 @@ import json
 KEYS_FILE = 'KEYS.json'
 BASE_URL = 'https://api.twitter.com/1.1'
 FOLLOWERS_ID_PATH = '/followers/ids.json'
+BLOCK_IDS_PATH = '/blocks/ids.json'
 BLOCK_CREATE_PATH = '/blocks/create.json'
 BLOCK_DESTROY_PATH = '/blocks/destroy.json'
 
@@ -28,6 +29,11 @@ def get_followers():
     return requests.get(url, auth=AUTH).json()
 
 
+def get_blocks():
+    url = BASE_URL + BLOCK_IDS_PATH
+    return requests.get(url, auth=AUTH).json()['ids']
+
+
 def create_block(id):
     user_id_param = 'user_id='
     url = BASE_URL + BLOCK_CREATE_PATH + '?' + user_id_param + str(id)
@@ -49,12 +55,13 @@ def destroy_blocks(ids):
     for id in ids:
         destory_block(id)
 
-# TODO: get the blocks after blocking
 # TODO: cursoring
 # TODO: check for privacy settings
+# TODO: follow back maybe
 
 
 if __name__ == "__main__":
     follower_ids = get_followers()['ids']
     create_blocks(follower_ids)
-    destroy_blocks(follower_ids)
+    blocked_ids = get_blocks()
+    destroy_blocks(blocked_ids)
