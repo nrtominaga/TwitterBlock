@@ -5,6 +5,7 @@ import json
 KEYS_FILE = 'KEYS.json'
 BASE_URL = 'https://api.twitter.com/1.1'
 FOLLOWERS_ID_PATH = '/followers/ids.json'
+BLOCK_CREATE_PATH = '/blocks/create.json'
 
 
 def load_keys(key_name, file_name=KEYS_FILE):
@@ -26,6 +27,22 @@ def get_followers():
     return requests.get(url, auth=AUTH).json()
 
 
+def create_block(id):
+    user_id_param = 'user_id='
+    url = BASE_URL + BLOCK_CREATE_PATH + '?' + user_id_param + str(id)
+    requests.post(url, auth=AUTH)
+
+
+def create_blocks(ids):
+    for id in ids:
+        create_block(id)
+
+
+def destroy_blocks(ids):
+    for id in ids:
+
+
+
 if __name__ == "__main__":
-    follower_ids = get_followers()
-    print(follower_ids)
+    follower_ids = get_followers()['ids']
+    create_blocks(follower_ids)
