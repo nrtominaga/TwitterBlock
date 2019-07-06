@@ -26,7 +26,7 @@ AUTH = OAuth1(API_KEY, API_SECRET_KEY, ACCESS_TOKEN, ACCESS_TOKEN_SECRET)
 def get_followers():
     screen_name_param = 'screen_name='
     url = BASE_URL + FOLLOWERS_ID_PATH + '?' + screen_name_param + SCREEN_NAME
-    return requests.get(url, auth=AUTH).json()
+    return requests.get(url, auth=AUTH).json()['ids']
 
 
 def get_blocks():
@@ -61,7 +61,7 @@ def destroy_blocks(ids):
 
 
 if __name__ == "__main__":
-    follower_ids = get_followers()['ids']
+    follower_ids = get_followers()
     create_blocks(follower_ids)
     blocked_ids = get_blocks()
     destroy_blocks(blocked_ids)
