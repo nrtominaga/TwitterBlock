@@ -55,13 +55,18 @@ def destroy_blocks(ids):
     for id in ids:
         destory_block(id)
 
+
+def block():
+    follower_ids = get_followers()
+    create_blocks(follower_ids)
+    blocked_ids = get_blocks()
+    destroy_blocks(blocked_ids)
+
+
 # TODO: cursoring
 # TODO: check for privacy settings
 # TODO: follow back maybe
 
 
 if __name__ == "__main__":
-    follower_ids = get_followers()
-    create_blocks(follower_ids)
-    blocked_ids = get_blocks()
-    destroy_blocks(blocked_ids)
+    block()
