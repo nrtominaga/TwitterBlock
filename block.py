@@ -56,7 +56,7 @@ def destroy_blocks(ids):
         destory_block(id)
 
 
-def block():
+def block(event, context):
     follower_ids = get_followers()
     create_blocks(follower_ids)
     blocked_ids = get_blocks()
@@ -66,7 +66,3 @@ def block():
 # TODO: cursoring
 # TODO: check for privacy settings
 # TODO: follow back maybe
-
-
-if __name__ == "__main__":
-    block()
