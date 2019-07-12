@@ -38,8 +38,16 @@ def get_followers():
 
 
 def get_blocks():
-    url = BASE_URL + BLOCK_IDS_PATH
-    return requests.get(url, auth=AUTH).json()['ids']
+    ids = []
+    next_cursor = -1
+    cursor_param = 'cursor='
+    while next_cursor != 0:
+        url = BASE_URL + BLOCK_IDS_PATH + '?' + cursor_param + str(next_cursor)
+        response = requests.get(url, auth=AUTH)
+        json_response = response.json()
+        ids += json_response['ids']
+        next_cursor = json_response['next_cursor']
+    return ids
 
 
 def create_block(id):
