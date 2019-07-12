@@ -24,14 +24,30 @@ AUTH = OAuth1(API_KEY, API_SECRET_KEY, ACCESS_TOKEN, ACCESS_TOKEN_SECRET)
 
 
 def get_followers():
+    ids = []
+    next_cursor = -1
     screen_name_param = 'screen_name='
-    url = BASE_URL + FOLLOWERS_ID_PATH + '?' + screen_name_param + SCREEN_NAME
-    return requests.get(url, auth=AUTH).json()['ids']
+    cursor_param = 'cursor='
+    while next_cursor != 0:
+        url = BASE_URL + FOLLOWERS_ID_PATH + '?' + screen_name_param + SCREEN_NAME + '&' + cursor_param + str(next_cursor)
+        response = requests.get(url, auth=AUTH)
+        json_response = response.json()
+        ids += json_response['ids']
+        next_cursor = json_response['next_cursor']
+    return ids
 
 
 def get_blocks():
-    url = BASE_URL + BLOCK_IDS_PATH
-    return requests.get(url, auth=AUTH).json()['ids']
+    ids = []
+    next_cursor = -1
+    cursor_param = 'cursor='
+    while next_cursor != 0:
+        url = BASE_URL + BLOCK_IDS_PATH + '?' + cursor_param + str(next_cursor)
+        response = requests.get(url, auth=AUTH)
+        json_response = response.json()
+        ids += json_response['ids']
+        next_cursor = json_response['next_cursor']
+    return ids
 
 
 def create_block(id):
