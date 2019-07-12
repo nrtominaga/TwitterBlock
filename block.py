@@ -79,7 +79,6 @@ def block(event, context):
     destroy_blocks(blocked_ids)
 
 
-# TODO: check for privacy settings
 # TODO: follow back maybe
 
 if __name__ == '__main__':
