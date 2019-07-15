@@ -5,6 +5,7 @@ import json
 KEYS_FILE = 'KEYS.json'
 BASE_URL = 'https://api.twitter.com/1.1'
 FOLLOWERS_ID_PATH = '/followers/ids.json'
+FRIENDS_ID_PATH = '/friends/ids.json'
 BLOCK_IDS_PATH = '/blocks/ids.json'
 BLOCK_CREATE_PATH = '/blocks/create.json'
 BLOCK_DESTROY_PATH = '/blocks/destroy.json'
@@ -21,6 +22,20 @@ ACCESS_TOKEN = load_keys('ACCESS_TOKEN')
 ACCESS_TOKEN_SECRET = load_keys('ACCESS_TOKEN_SECRET')
 SCREEN_NAME = load_keys('SCREEN_NAME')
 AUTH = OAuth1(API_KEY, API_SECRET_KEY, ACCESS_TOKEN, ACCESS_TOKEN_SECRET)
+
+
+def get_friends():
+    ids = []
+    next_cursor = -1
+    screen_name_param = 'screen_name='
+    cursor_param = 'cursor='
+    while next_cursor != 0:
+        url = BASE_URL + FRIENDS_ID_PATH + '?' + screen_name_param + SCREEN_NAME + '&' + cursor_param + str(next_cursor)
+        response = requests.get(url, auth=AUTH)
+        json_response = response.json()
+        ids += json_response['ids']
+        next_cursor = json_response['next_cursor']
+    return ids
 
 
 def get_followers():
@@ -74,6 +89,8 @@ def destroy_blocks(ids):
 
 def block(event, context):
     follower_ids = get_followers()
+    old_friends = get_friends()
+
     create_blocks(follower_ids)
     blocked_ids = get_blocks()
     destroy_blocks(blocked_ids)
