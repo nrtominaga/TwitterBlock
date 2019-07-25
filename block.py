@@ -9,6 +9,7 @@ FRIENDS_ID_PATH = '/friends/ids.json'
 BLOCK_IDS_PATH = '/blocks/ids.json'
 BLOCK_CREATE_PATH = '/blocks/create.json'
 BLOCK_DESTROY_PATH = '/blocks/destroy.json'
+FRIENDSHIP_CREATE_PATH = '/friendships/create.json'
 
 
 def load_keys(key_name, file_name=KEYS_FILE):
@@ -87,16 +88,27 @@ def destroy_blocks(ids):
         destory_block(id)
 
 
+def create_friend(id):
+    user_id_param = 'user_id='
+    url = BASE_URL + FRIENDSHIP_CREATE_PATH + '?' + user_id_param + str(id)
+    requests.post(url, auth=AUTH)
+
+
+def follow_back(new_friends, old_friends):
+    friends_to_follow_back = list(set(old_friends) - set(new_friends))
+    for friend in friends_to_follow_back:
+        create_friend(friend)
+
+
 def block(event, context):
     follower_ids = get_followers()
     old_friends = get_friends()
-
     create_blocks(follower_ids)
     blocked_ids = get_blocks()
     destroy_blocks(blocked_ids)
+    new_friends = get_friends()
+    follow_back(new_friends, old_friends)
 
-
-# TODO: follow back maybe
 
 if __name__ == '__main__':
     block(1, 1)
